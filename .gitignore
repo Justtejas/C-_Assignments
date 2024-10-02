@@ -1,0 +1,73 @@
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+
+# Ignore build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# Ignore Visual Studio Code temporary files
+.vscode/
+
+# Ignore Rider project files
+.idea/
+
+# Ignore package management directories
+packages/
+node_modules/
+
+# Ignore Resharper files
+_ReSharper*/
+*.sln.docstates
+
+# Ignore any database or migration files
+.mdf
+.ldf
+
+# Ignore NuGet packages
+*.nupkg
+# Uncomment if you have the NuGet Packages folder in your project.
+# **/packages/
+
+# Ignore Mac OS folder attributes
+.DS_Store
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+desktop.ini
+
+# Rider configuration files
+.idea/
+
+# JetBrains Rider
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+
+# Ignore temporary files from Microsoft Azure Web Apps
+.project
+
+# Ignore Docker files
+.docker/
+
+# Ignore coverage files
+coverage/
+*.coverage
+*.coveragexml
+*.log
+
+# Ignore tooling files for Visual Studio
+.vs/
+.vscode/
+
+# Ignore personal Visual Studio for Mac preferences
+.vscode/settings.json
+
