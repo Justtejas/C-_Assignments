@@ -31,10 +31,56 @@ namespace CaseStudy.DAO
                 }
             }
         }
-        
-        //public bool UpdateVehicle(Vehicle vehicle)
-        //{
-        //    cmd.CommandText = "Update Vehicle Set @"
-        //}
+        public bool DeleteVehicle(int VehicleID)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Delete from Vehicles where VehicleID =  @VehicleID";
+                    cmd.Parameters.AddWithValue("@VehicleID",VehicleID);
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    int deleteVehicleStatus = cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    return deleteVehicleStatus > 0;
+                }
+            }
+        }
+        public bool CancelTrip(int tripID)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Update Trips set VehicleStatus = 'Cancelled' where TripID = @tripID";
+                    cmd.Parameters.AddWithValue("@TripID",tripID);
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    int tripStatus = cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    return tripStatus > 0;
+                }
+            }
+        }
+        public bool ScheduleTrip(int vehicleID, int routeID, string departureDate, string arrivalDate)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Insert into Trips(VehicleID, RouteID, DepartureDate, ArrivalDate) values(@vehicleID, @routeID, @departureDate, @arrivalDate)";
+                    cmd.Parameters.AddWithValue("@VehicleID",vehicleID);
+                    cmd.Parameters.AddWithValue("@RouteID",routeID);
+                    cmd.Parameters.AddWithValue("@DepartureDate",DateTime.Parse(departureDate));
+                    cmd.Parameters.AddWithValue("@ArrivalDate", DateTime.Parse(arrivalDate));
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    int tripStatus = cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    return tripStatus > 0;
+                }
+            }
+        }
     }
 }

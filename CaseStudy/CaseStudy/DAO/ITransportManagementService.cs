@@ -4,12 +4,12 @@ namespace CaseStudy.DAO
     internal interface ITransportManagementService
     {
         bool AddVehicle(Vehicle vehicle);
-        bool UpdateVehicle(Vehicle vehicle);
-        //bool DeleteVehicle(int vehicleID);
+        //bool UpdateVehicle(Vehicle vehicle);
+        bool DeleteVehicle(int vehicleID);
 
-        //bool ScheduleTrip(int vehicleID, int routeID, string departureDate, string arrivalDate);
+        bool ScheduleTrip(int vehicleID, int routeID, string departureDate, string arrivalDate);
 
-        //bool CancelTrip(int tripID);
+        bool CancelTrip(int tripID);
 
         //bool BookTrip(int tripID, int passengerID, string bookingDate);
 
