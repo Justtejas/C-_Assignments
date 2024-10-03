@@ -19,10 +19,10 @@ namespace CaseStudy.DAO
 
         //bool DeallocateDriver(int tripID);
 
-        //List<Booking> GetBookingsByPassenger(int passengerID);
+        List<Booking> GetBookingsByPassenger(int passengerID);
 
         List<Booking> GetBookingsByTrip(int tripID);
 
-        //List<Driver> GetAvailableDrivers();
+        List<Driver> GetAvailableDrivers();
     }
 }
