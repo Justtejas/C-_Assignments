@@ -82,5 +82,51 @@ namespace CaseStudy.DAO
                 }
             }
         }
+        public bool CancelBooking(int bookingID)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Update Bookings Set VehicleStatus = 'Cancelled' Where BookingID = @bookingID";
+                    cmd.Parameters.AddWithValue("@BookingID",bookingID);
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    int bookingStatus = cmd.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    return bookingStatus > 0;
+                }
+            }
+        }
+
+        public List<Booking> GetBookingsByTrip(int tripID)
+        {
+            List<Booking> bookings = new List<Booking>();
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Select * from Bookings where TripID = @tripID";
+                    cmd.Parameters.AddWithValue("@tripID",tripID);
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Booking booking = new Booking
+                        (
+                             Convert.ToInt32(reader["BookingID"]),
+                             Convert.ToInt32(reader["TripID"]),
+                             Convert.ToInt32(reader["PassengerID"]),
+                             Convert.ToString(reader["BookingDate"]),
+                             Convert.ToString(reader["VehicleStatus"])
+                        );
+                        bookings.Add(booking);
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            return bookings;
+        }
     }
 }

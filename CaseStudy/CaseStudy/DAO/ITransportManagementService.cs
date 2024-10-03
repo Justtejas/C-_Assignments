@@ -13,7 +13,7 @@ namespace CaseStudy.DAO
 
         //bool BookTrip(int tripID, int passengerID, string bookingDate);
 
-        //bool CancelBooking(int bookingID);
+        bool CancelBooking(int bookingID);
 
         //bool AllocateDriver(int tripID, int driverID);
 
@@ -21,7 +21,7 @@ namespace CaseStudy.DAO
 
         //List<Booking> GetBookingsByPassenger(int passengerID);
 
-        //List<Booking> GetBookingsByTrip(int tripID);
+        List<Booking> GetBookingsByTrip(int tripID);
 
         //List<Driver> GetAvailableDrivers();
     }
