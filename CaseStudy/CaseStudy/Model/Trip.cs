@@ -10,7 +10,9 @@
         public DateTime ArrivalDate { get; set; }
         public string? TripStatus { get; set; }
         public int? MaxPassengers { get; set; }
+               
 
+        public Trip() { }
         public Trip(int tripID, int? vehicleID, int? routeID, int? driverID, DateTime departureDate, DateTime arrivalDate, string? tripStatus, int? maxPassengers)
         {
             TripID = tripID;

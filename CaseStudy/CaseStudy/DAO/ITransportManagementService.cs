@@ -3,6 +3,8 @@ namespace CaseStudy.DAO
 {
     internal interface ITransportManagementService
     {
+        bool IsVehiclePresent(int vehicleId);
+        bool UpdateVehicle(string fieldName, object? newValue, int vehicleID);
         List<Vehicle> GetVehicles();
         bool AddVehicle(Vehicle vehicle);
         //bool UpdateVehicle(Vehicle vehicle);

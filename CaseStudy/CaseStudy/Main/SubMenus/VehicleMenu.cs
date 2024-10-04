@@ -1,4 +1,5 @@
 ﻿using CaseStudy.DAO;
+using CaseStudy.Exceptions;
 using CaseStudy.Model;
 
 namespace CaseStudy.Main.SubMenus
@@ -6,7 +7,7 @@ namespace CaseStudy.Main.SubMenus
     internal class VehicleMenu
     {
         readonly ITransportManagementService _transport = new TransportManagementServiceImp();
-        PrettyConsole prettyConsole = new PrettyConsole();
+        readonly PrettyConsole _prettyConsole = new();
         public VehicleMenu()
         {
             Console.Title = "Vehicle";
@@ -14,31 +15,45 @@ namespace CaseStudy.Main.SubMenus
 
         public void Menu()
         {
-            int choice;
-            do {
-                Console.WriteLine("------------------------------ Vehicles ------------------------\n");
-                Console.WriteLine("1. Add Vehicle");
-                Console.WriteLine("2. Display Vehicles");
-                Console.WriteLine("3. Update Vehicle");
-                Console.WriteLine("4. Delete Vehicle");
-                Console.WriteLine("5. Exit");
-                Console.Write("> ");
-                choice = Convert.ToInt32(Console.ReadLine());
-                switch (choice)
+            int choice = 0;
+            do
+            {
+                try
                 {
-                    case 1:
-                        AddVehicle();
-                        break;
-                    case 2:
-                        DisplayVehicles();
-                        break;
-                    case 4:
-                        DeleteVehicle();
-                        break;
-                    case 5:
-                        Console.WriteLine("Exiting Vehicle menu");
-                        Console.Clear();
-                        break;
+                    Console.WriteLine("\n------------------------------ Vehicles ------------------------\n");
+                    Console.WriteLine("1. Add Vehicle");
+                    Console.WriteLine("2. Display Vehicles");
+                    Console.WriteLine("3. Update Vehicle");
+                    Console.WriteLine("4. Delete Vehicle");
+                    Console.WriteLine("5. Exit");
+                    Console.Write("> ");
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    switch (choice)
+                    {
+                        case 1:
+                            AddVehicleMenu();
+                            break;
+                        case 2:
+                            DisplayVehicles();
+                            break;
+                        case 3:
+                            UpdateVehicleMenu();
+                            break;
+                        case 4:
+                            DeleteVehicleMenu();
+                            break;
+                        case 5:
+                            Console.WriteLine("Exiting Vehicle menu");
+                            Console.Clear();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Option! Try again");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
             } while (choice != 5);
         }
@@ -46,51 +61,162 @@ namespace CaseStudy.Main.SubMenus
         private void DisplayVehicles()
         {
             List<Vehicle> vehicles = _transport.GetVehicles();
-            prettyConsole.Table(vehicles);
+            _prettyConsole.Table(vehicles);
         }
-        private Vehicle AddVehicleMenu()
+        private void AddVehicleMenu()
         {
-            Vehicle vehicle = new Vehicle();
-            Console.WriteLine("Add Model\n");
-            Console.Write("> ");
-            vehicle.Model = Console.ReadLine();
-            Console.WriteLine("Add Capacity\n");
-            Console.Write("> ");
-            vehicle.Capacity = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Add Type\n");
-            Console.Write("> ");
-            vehicle.Type = Console.ReadLine();
-            Console.WriteLine("Add Vehicle Status\n");
-            Console.Write("> ");
-            vehicle.VehicleStatus = Console.ReadLine();
-            return vehicle;
+            try
+            {
+                Console.WriteLine();
+                Vehicle vehicle = new Vehicle();
+                Console.WriteLine("\nAdd Model\n");
+                Console.Write("> ");
+                vehicle.Model = Console.ReadLine();
+                Console.WriteLine("\nAdd Capacity\n");
+                Console.Write("> ");
+                vehicle.Capacity = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("\nAdd Type\n");
+                Console.Write("> ");
+                vehicle.Type = Console.ReadLine();
+                Console.WriteLine("\nAdd Vehicle Status\n");
+                Console.Write("> ");
+                vehicle.VehicleStatus = Console.ReadLine();
+                AddVehicle(vehicle);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
-        private void AddVehicle()
+        private void AddVehicle(Vehicle vehicle)
         {
-            Vehicle vehicle = AddVehicleMenu();
             bool addVehicleStatus = _transport.AddVehicle(vehicle);
             if (!addVehicleStatus)
             {
-                prettyConsole.Print("Error Adding Vehicle",false);
+                _prettyConsole.Print("Error Adding Vehicle\n", false);
             }
-            prettyConsole.Print("Added Vehicle Successfully",true);
-        }
-        private int DeleteVehicleMenu()
-        {
-            Console.WriteLine("Enter the Vehicle Id:\n");
-            int vehicleID = Convert.ToInt32(Console.ReadLine());
-            return vehicleID;
+            _prettyConsole.Print("Added Vehicle Successfully\n", true);
         }
 
-        private void DeleteVehicle()
+        private void UpdateVehicleMenu()
         {
-            int vehicleID = DeleteVehicleMenu();
+            DisplayVehicles();
+            int choice;
+            string fieldToUpdate = string.Empty;
+            object? newValue = null;
+            Console.WriteLine("Enter the Vehicle ID of the Vehicle");
+            Console.Write("> ");
+            int vehicleID = Convert.ToInt32(Console.ReadLine());
+            bool isPresent = _transport.IsVehiclePresent(vehicleID);
+            try
+            {
+                if (isPresent)
+                {
+                    do
+                    {
+                        Console.WriteLine("Select the field to update");
+                        Console.WriteLine("1. Model");
+                        Console.WriteLine("2. Capacity");
+                        Console.WriteLine("3. Type");
+                        Console.WriteLine("4. Vehicle Status");
+                        Console.WriteLine("5. Exit");
+                        Console.Write("> ");
+                        choice = Convert.ToInt32(Console.ReadLine());
+                        switch (choice)
+                        {
+                            case 1:
+                                fieldToUpdate = "Model";
+                                Console.WriteLine("Enter new value of Model");
+                                Console.Write("> ");
+                                newValue = Console.ReadLine();
+                                break;
+                            case 2:
+                                fieldToUpdate = "Capacity";
+                                Console.WriteLine("Enter new value of Capacity");
+                                Console.Write("> ");
+                                newValue = Convert.ToDouble(Console.ReadLine());
+                                break;
+                            case 3:
+                                fieldToUpdate = "Type";
+                                Console.WriteLine("Enter new value of Type");
+                                Console.Write("> ");
+                                newValue = Console.ReadLine();
+                                break;
+                            case 4:
+                                fieldToUpdate = "VehicleStatus";
+                                Console.WriteLine("Enter new value of Vehicle Status");
+                                Console.Write("> ");
+                                newValue = Console.ReadLine();
+                                break;
+                            case 5:
+                                Console.WriteLine("Exiting Update Vehicle Menu");
+                                break;
+                        }
+                        UpdateVehicle(fieldToUpdate, newValue, vehicleID);
+                    } while (choice != 5);
+                }
+                else
+                {
+                    throw new VehicleNotFoundException($"The VehicleID {vehicleID} could not be found.\n", vehicleID);
+                }
+            }
+            catch (VehicleNotFoundException vnfe)
+            {
+                Console.WriteLine(vnfe.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void UpdateVehicle(string fieldName, object? newValue, int vehicleID)
+        {
+            bool updateStatus = _transport.UpdateVehicle(fieldName, newValue, vehicleID);
+            if (updateStatus)
+            {
+                _prettyConsole.Print($"Successfully updated {fieldName}\n", true);
+            }
+            else
+            {
+                _prettyConsole.Print($"Error updating {fieldName}\n", false);
+            }
+        }
+        private void DeleteVehicleMenu()
+        {
+            DisplayVehicles();
+            Console.WriteLine("\nEnter the Vehicle Id:\n");
+            Console.Write("> ");
+            int vehicleID = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                bool isPresent = _transport.IsVehiclePresent(vehicleID);
+                if (isPresent)
+                {
+                    DeleteVehicle(vehicleID);
+                }
+                else
+                {
+                    throw new VehicleNotFoundException($"The VehicleID {vehicleID} could not be found.\n", vehicleID);
+                }
+            }
+            catch (VehicleNotFoundException vnfe)
+            {
+                Console.WriteLine(vnfe.Message);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void DeleteVehicle(int vehicleID)
+        {
             bool deleteVehicleStatus = _transport.DeleteVehicle(vehicleID);
             if (!deleteVehicleStatus)
             {
-                prettyConsole.Print("Error Deleting Vehicle",false);
+                _prettyConsole.Print("Error Deleting Vehicle\n", false);
             }
-            prettyConsole.Print("Deleted Vehicle Successfully", false);
+            _prettyConsole.Print("Deleted Vehicle Successfully\n", true);
         }
     }
 }

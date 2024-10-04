@@ -11,35 +11,45 @@ namespace CaseStudy.Main
 
         public void MainMenu()
         {
-            int choice;
+            int choice = 0;
             do
             {
-                Console.WriteLine("------------------------------ Transport Management System ------------------------");
-                Console.WriteLine("\n1. Vehicle");
-                Console.WriteLine("2. Exit");
-                Console.Write("> ");
-                //Console.WriteLine("4. Schedule Trip");
-                //Console.WriteLine("5. Cancel Trip");
-                //Console.WriteLine("6. Book Trip");
-                //Console.WriteLine("7. Cancel Booking");
-                //Console.WriteLine("8. Allocate Driver");
-                //Console.WriteLine("9. Deallocate Driver");
-                //Console.WriteLine("10. Get Bookings");
-                //Console.WriteLine("11. Get Available Drivers");
-                choice = Convert.ToInt32(Console.ReadLine());
-                switch (choice)
+                try
                 {
-                    case 1:
-                        VehicleMenu vMenu = new VehicleMenu();
-                        Console.Clear();
-                        vMenu.Menu();
-                        break;
-                    case 2:
-                        Console.Beep();
-                        Console.WriteLine("Exiting Transport Management System");
-                        break;
+                    Console.WriteLine("------------------------------ Transport Management System ------------------------");
+                    Console.WriteLine("\n1. Vehicle");
+                    Console.WriteLine("2. Exit");
+                    Console.Write("> ");
+                    //Console.WriteLine("4. Schedule Trip");
+                    //Console.WriteLine("5. Cancel Trip");
+                    //Console.WriteLine("6. Book Trip");
+                    //Console.WriteLine("7. Cancel Booking");
+                    //Console.WriteLine("8. Allocate Driver");
+                    //Console.WriteLine("9. Deallocate Driver");
+                    //Console.WriteLine("10. Get Bookings");
+                    //Console.WriteLine("11. Get Available Drivers");
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    switch (choice)
+                    {
+                        case 1:
+                            VehicleMenu vMenu = new VehicleMenu();
+                            Console.Clear();
+                            vMenu.Menu();
+                            break;
+                        case 2:
+                            Console.Beep();
+                            Console.WriteLine("Exiting Transport Management System");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Option! Try again");
+                            break;
+                    }
                 }
-            }while(choice != 2);
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (choice != 2);
         }
     }
 }
