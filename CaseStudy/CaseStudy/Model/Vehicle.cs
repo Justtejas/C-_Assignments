@@ -8,7 +8,11 @@
         public string? Type { get; set; }
         public string? VehicleStatus { get; set; }
 
-        public Vehicle(int vehicleID, string model, double? capacity, string type, string vehicleStatus)
+        public Vehicle()
+        {
+            
+        }
+        public Vehicle(int vehicleID, string? model, double? capacity, string? type, string? vehicleStatus)
         {
             VehicleID = vehicleID;
             Model = model;

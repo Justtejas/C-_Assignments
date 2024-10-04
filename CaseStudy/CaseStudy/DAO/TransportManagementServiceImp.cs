@@ -12,6 +12,33 @@ namespace CaseStudy.DAO
             _connectionString = DBConnUtil.GetConnString(); 
         }
 
+        public List<Vehicle> GetVehicles() {
+            List<Vehicle> vehicles = new List<Vehicle>();
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "Select * from Vehicles";
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Vehicle vehicle = new Vehicle
+                        (
+                            Convert.ToInt32(reader["VehicleID"]),
+                            Convert.IsDBNull(reader["Model"]) ? null : Convert.ToString(reader["Model"]),
+                            Convert.IsDBNull(reader["Capacity"]) ? null : Convert.ToDouble(reader["Capacity"]),
+                            Convert.IsDBNull(reader["Type"]) ? null : Convert.ToString(reader["Type"]),
+                            Convert.IsDBNull(reader["VehicleStatus"]) ? null : Convert.ToString(reader["VehicleStatus"])
+                        );
+                        vehicles.Add(vehicle);
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            return vehicles;
+        }
         public bool AddVehicle(Vehicle vehicle)
         {
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
@@ -174,7 +201,7 @@ namespace CaseStudy.DAO
                         (
                              Convert.ToInt32(reader["DriverID"]),
                              Convert.IsDBNull(reader["TripID"]) ? null : Convert.ToInt32(reader["TripID"]),
-                             Convert.IsDBNull(reader["Name"]) ? null : Convert.ToString(reader["Name"])
+                             Convert.ToString(reader["Name"])
                         );
                         drivers.Add(driver);
                     }
