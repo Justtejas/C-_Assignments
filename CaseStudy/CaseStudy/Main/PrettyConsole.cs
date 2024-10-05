@@ -7,17 +7,24 @@ namespace CaseStudy.Main
     {
         public PrettyConsole() { }
 
-        public void Print(string message,bool success)
+        public void Print(string message,string type)
         {
-            if (success)
+            type = type.ToLower();
+            if (type == "success")
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(message);
                 Console.ResetColor();
             }
-            else
+            else if(type == "fail")
             {
                 Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(message);
+                Console.ResetColor();
+            }
+            else if(type == "exception")
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(message);
                 Console.ResetColor();
             }
@@ -44,7 +51,7 @@ namespace CaseStudy.Main
                 }
                 table.AddRow(values.ToArray());
             }
-            table.Write(Format.MarkDown);
+            Console.WriteLine(table.ToString());
         }
     }
 }

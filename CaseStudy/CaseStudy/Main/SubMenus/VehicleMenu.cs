@@ -43,7 +43,7 @@ namespace CaseStudy.Main.SubMenus
                             DeleteVehicleMenu();
                             break;
                         case 5:
-                            Console.WriteLine("Exiting Vehicle menu");
+                            Console.WriteLine("Vehicle menu exited.");
                             Console.Clear();
                             break;
                         default:
@@ -93,9 +93,9 @@ namespace CaseStudy.Main.SubMenus
             bool addVehicleStatus = _transport.AddVehicle(vehicle);
             if (!addVehicleStatus)
             {
-                _prettyConsole.Print("Error Adding Vehicle\n", false);
+                _prettyConsole.Print("Error Adding Vehicle\n", "fail");
             }
-            _prettyConsole.Print("Added Vehicle Successfully\n", true);
+            _prettyConsole.Print("Added Vehicle Successfully\n", "success");
         }
 
         private void UpdateVehicleMenu()
@@ -174,11 +174,11 @@ namespace CaseStudy.Main.SubMenus
             bool updateStatus = _transport.UpdateVehicle(fieldName, newValue, vehicleID);
             if (updateStatus)
             {
-                _prettyConsole.Print($"Successfully updated {fieldName}\n", true);
+                _prettyConsole.Print($"Successfully updated {fieldName}\n", "success");
             }
             else
             {
-                _prettyConsole.Print($"Error updating {fieldName}\n", false);
+                _prettyConsole.Print($"Error updating {fieldName}\n", "fail");
             }
         }
         private void DeleteVehicleMenu()
@@ -214,9 +214,9 @@ namespace CaseStudy.Main.SubMenus
             bool deleteVehicleStatus = _transport.DeleteVehicle(vehicleID);
             if (!deleteVehicleStatus)
             {
-                _prettyConsole.Print("Error Deleting Vehicle\n", false);
+                _prettyConsole.Print("Error Deleting Vehicle\n", "fail");
             }
-            _prettyConsole.Print("Deleted Vehicle Successfully\n", true);
+            _prettyConsole.Print("Deleted Vehicle Successfully\n", "success");
         }
     }
 }

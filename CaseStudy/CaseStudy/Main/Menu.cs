@@ -18,7 +18,8 @@ namespace CaseStudy.Main
                 {
                     Console.WriteLine("------------------------------ Transport Management System ------------------------");
                     Console.WriteLine("\n1. Vehicle");
-                    Console.WriteLine("2. Exit");
+                    Console.WriteLine("\n2. Booking Trips");
+                    Console.WriteLine("\n3. Exit");
                     Console.Write("> ");
                     //Console.WriteLine("4. Schedule Trip");
                     //Console.WriteLine("5. Cancel Trip");
@@ -32,11 +33,16 @@ namespace CaseStudy.Main
                     switch (choice)
                     {
                         case 1:
-                            VehicleMenu vMenu = new VehicleMenu();
+                            VehicleMenu vMenu = new();
                             Console.Clear();
                             vMenu.Menu();
                             break;
                         case 2:
+                            BookingsMenu bookingsMenu = new();
+                            Console.Clear();
+                            bookingsMenu.Menu();
+                            break;
+                        case 3:
                             Console.Beep();
                             Console.WriteLine("Exiting Transport Management System");
                             break;
@@ -49,7 +55,7 @@ namespace CaseStudy.Main
                 {
                     Console.WriteLine(ex.Message);
                 }
-            } while (choice != 2);
+            } while (choice != 3);
         }
     }
 }
