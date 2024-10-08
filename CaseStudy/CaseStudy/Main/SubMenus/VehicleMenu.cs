@@ -15,6 +15,7 @@ namespace CaseStudy.Main.SubMenus
 
         public void Menu()
         {
+            Console.Clear();
             int choice = 0;
             do
             {
@@ -25,7 +26,8 @@ namespace CaseStudy.Main.SubMenus
                     Console.WriteLine("2. Display Vehicles");
                     Console.WriteLine("3. Update Vehicle");
                     Console.WriteLine("4. Delete Vehicle");
-                    Console.WriteLine("5. Exit");
+                    Console.WriteLine("5. Display Available Drivers");
+                    Console.WriteLine("6. Exit");
                     Console.Write("> ");
                     choice = Convert.ToInt32(Console.ReadLine());
                     switch (choice)
@@ -43,6 +45,9 @@ namespace CaseStudy.Main.SubMenus
                             DeleteVehicleMenu();
                             break;
                         case 5:
+                            DisplayDrivers();
+                            break;
+                        case 6:
                             Console.WriteLine("Vehicle menu exited.");
                             Console.Clear();
                             break;
@@ -55,9 +60,13 @@ namespace CaseStudy.Main.SubMenus
                 {
                     Console.WriteLine(ex.Message);
                 }
-            } while (choice != 5);
+            } while (choice != 6);
         }
 
+        private void DisplayDrivers()
+        {
+            _prettyConsole.Table(_transport.GetAvailableDrivers());
+        }
         private void DisplayVehicles()
         {
             List<Vehicle> vehicles = _transport.GetVehicles();

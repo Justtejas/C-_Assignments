@@ -13,32 +13,37 @@ namespace CaseStudy.Main.SubMenus
             Console.Title = "Booking Trip";
         }
 
-        public void Menu()
+        public void Menu(Passenger passenger)
         {
             int choice = 0;
             do
             {
+                Console.WriteLine($"Your Passenger ID is {passenger.PassengerID}");
                 try
                 {
                     Console.WriteLine("\n------------------------------ Booking Trip ------------------------\n");
                     Console.WriteLine("1. Book Trip");
                     Console.WriteLine("2. Cancel Booking");
                     Console.WriteLine("3. Get your bookings");
-                    Console.WriteLine("4. Exit");
+                    Console.WriteLine("4. Schedule Trips");
+                    Console.WriteLine("5. Exit");
                     Console.Write("> ");
                     choice = Convert.ToInt32(Console.ReadLine());
                     switch (choice)
                     {
                         case 1:
-                            //BookTripMenu();
+                            BookTrip(passenger);
                             break;
                         case 2:
-                            //CancelTripMenu();
+                            CancelTripMenu();
                             break;
                         case 3:
-                            DisplayBookings();
+                            DisplayBookings(passenger);
                             break;
                         case 4:
+                            ScheduleMenu();
+                            break;
+                        case 5:
                             Console.WriteLine("Booking Menu Exited.");
                             Console.Clear();
                             break;
@@ -51,17 +56,51 @@ namespace CaseStudy.Main.SubMenus
                 {
                     Console.WriteLine(ex.Message);
                 }
-            } while (choice != 4);
+            } while (choice != 5);
         }
 
-        private void DisplayBookings()
+        private void ScheduleMenu()
+        {
+            _prettyConsole.Table(_transport.GetAvailableVehicles());
+            Console.WriteLine("Enter the Vehicle id");
+            Console.Write("> ");
+            int vehicleID = Convert.ToInt32(Console.ReadLine());
+            _transport.DisplayRoutes();
+            Console.WriteLine("Enter the Route id");
+            Console.Write("> ");
+            int routeID = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\n Enter the Departure date (yyyy-mm-dd)\n");
+            Console.Write("> ");
+            DateTime departureDate = Convert.ToDateTime(Console.ReadLine());
+            if (departureDate < DateTime.Now)
+            {
+                _prettyConsole.Print("The bookind date cannot be less than the current Date", "fail");
+            }
+            Console.WriteLine("\n Enter the Arrival date (yyyy-mm-dd)\n");
+            Console.Write("> ");
+            DateTime arrivalDate = Convert.ToDateTime(Console.ReadLine());
+            if (arrivalDate < DateTime.Now)
+            {
+                _prettyConsole.Print("The bookind date cannot be less than the current Date", "fail");
+            }
+            bool status = _transport.ScheduleTrip(vehicleID,routeID,departureDate,arrivalDate);
+            if (status)
+            {
+                _prettyConsole.Print("Trips scheduled successfully", "success");
+            }
+            else
+            {
+                _prettyConsole.Print("Could not schedule trip", "fail");
+            }
+        }
+        private void DisplayBookings(Passenger passenger)
         {
             try
             {
-                List<Booking> bookings = _transport.GetBookingsByPassenger(2);
+                List<Booking> bookings = _transport.GetBookingsByPassenger(passenger.PassengerID);
                 if (bookings == null || bookings.Count == 0)
                 {
-                    throw new BookingNotFoundException($"There are no bookings for {3}",3);
+                    throw new BookingNotFoundException($"There are no bookings for passenger ID {passenger.PassengerID}",passenger.PassengerID);
                 }
                 else
                 {
@@ -73,161 +112,53 @@ namespace CaseStudy.Main.SubMenus
                 _prettyConsole.Print(bnfe.Message,"exception");
             }
         }
-        //    private void AddVehicleMenu()
-        //    {
-        //        try
-        //        {
-        //            Console.WriteLine();
-        //            Vehicle vehicle = new Vehicle();
-        //            Console.WriteLine("\nAdd Model\n");
-        //            Console.Write("> ");
-        //            vehicle.Model = Console.ReadLine();
-        //            Console.WriteLine("\nAdd Capacity\n");
-        //            Console.Write("> ");
-        //            vehicle.Capacity = Convert.ToDouble(Console.ReadLine());
-        //            Console.WriteLine("\nAdd Type\n");
-        //            Console.Write("> ");
-        //            vehicle.Type = Console.ReadLine();
-        //            Console.WriteLine("\nAdd Vehicle Status\n");
-        //            Console.Write("> ");
-        //            vehicle.VehicleStatus = Console.ReadLine();
-        //            AddVehicle(vehicle);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //    }
-        //    private void AddVehicle(Vehicle vehicle)
-        //    {
-        //        bool addVehicleStatus = _transport.AddVehicle(vehicle);
-        //        if (!addVehicleStatus)
-        //        {
-        //            _prettyConsole.Print("Error Adding Vehicle\n", false);
-        //        }
-        //        _prettyConsole.Print("Added Vehicle Successfully\n", true);
-        //    }
+        private void CancelTripMenu()
+        {
+            Console.WriteLine("Insert the Trip ID to cancel");
+            Console.Write("> ");
+            int tripID = Convert.ToInt32(Console.ReadLine());
+            bool cancelStatus = _transport.CancelTrip(tripID);
+            if (cancelStatus)
+            {
+                _prettyConsole.Print($"Cancelled Trip {tripID} Successfully","success");
+            }
+        }
+        private void BookTrip(Passenger passenger)
+        {
+            Console.WriteLine($"Your Passenger ID is {passenger.PassengerID}");
+            try
+            {
+                Console.Clear();
+                Console.WriteLine();
+                _prettyConsole.Table(_transport.GetTrips());
+                Console.WriteLine("\nSelect Trip by entering the ID\n");
+                Console.Write("> ");
+                int tripID = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("\n Enter the booking date (yyyy-mm-dd)\n");
+                Console.Write("> ");
+                DateTime bookingDate = Convert.ToDateTime(Console.ReadLine());
+                if (bookingDate < DateTime.Now)
+                {
+                    _prettyConsole.Print("The bookind date cannot be less than the current Date", "fail");
+                }
+                else
+                {
+                    bool status = _transport.BookTrip(tripID, passenger.PassengerID, bookingDate);
+                    if (status)
+                    {
+                        _prettyConsole.Print("Trip Booked Successfully", "success");
+                    }
+                    else
+                    {
+                        _prettyConsole.Print("Unable to book the trip", "fail");
+                    }
+                }
 
-        //    private void UpdateVehicleMenu()
-        //    {
-        //        DisplayVehicles();
-        //        int choice;
-        //        string fieldToUpdate = string.Empty;
-        //        object? newValue = null;
-        //        Console.WriteLine("Enter the Vehicle ID of the Vehicle");
-        //        Console.Write("> ");
-        //        int vehicleID = Convert.ToInt32(Console.ReadLine());
-        //        bool isPresent = _transport.IsVehiclePresent(vehicleID);
-        //        try
-        //        {
-        //            if (isPresent)
-        //            {
-        //                do
-        //                {
-        //                    Console.WriteLine("Select the field to update");
-        //                    Console.WriteLine("1. Model");
-        //                    Console.WriteLine("2. Capacity");
-        //                    Console.WriteLine("3. Type");
-        //                    Console.WriteLine("4. Vehicle Status");
-        //                    Console.WriteLine("5. Exit");
-        //                    Console.Write("> ");
-        //                    choice = Convert.ToInt32(Console.ReadLine());
-        //                    switch (choice)
-        //                    {
-        //                        case 1:
-        //                            fieldToUpdate = "Model";
-        //                            Console.WriteLine("Enter new value of Model");
-        //                            Console.Write("> ");
-        //                            newValue = Console.ReadLine();
-        //                            break;
-        //                        case 2:
-        //                            fieldToUpdate = "Capacity";
-        //                            Console.WriteLine("Enter new value of Capacity");
-        //                            Console.Write("> ");
-        //                            newValue = Convert.ToDouble(Console.ReadLine());
-        //                            break;
-        //                        case 3:
-        //                            fieldToUpdate = "Type";
-        //                            Console.WriteLine("Enter new value of Type");
-        //                            Console.Write("> ");
-        //                            newValue = Console.ReadLine();
-        //                            break;
-        //                        case 4:
-        //                            fieldToUpdate = "VehicleStatus";
-        //                            Console.WriteLine("Enter new value of Vehicle Status");
-        //                            Console.Write("> ");
-        //                            newValue = Console.ReadLine();
-        //                            break;
-        //                        case 5:
-        //                            Console.WriteLine("Exiting Update Vehicle Menu");
-        //                            break;
-        //                    }
-        //                    UpdateVehicle(fieldToUpdate, newValue, vehicleID);
-        //                } while (choice != 5);
-        //            }
-        //            else
-        //            {
-        //                throw new VehicleNotFoundException($"The VehicleID {vehicleID} could not be found.\n", vehicleID);
-        //            }
-        //        }
-        //        catch (VehicleNotFoundException vnfe)
-        //        {
-        //            Console.WriteLine(vnfe.Message);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //    }
-        //    private void UpdateVehicle(string fieldName, object? newValue, int vehicleID)
-        //    {
-        //        bool updateStatus = _transport.UpdateVehicle(fieldName, newValue, vehicleID);
-        //        if (updateStatus)
-        //        {
-        //            _prettyConsole.Print($"Successfully updated {fieldName}\n", true);
-        //        }
-        //        else
-        //        {
-        //            _prettyConsole.Print($"Error updating {fieldName}\n", false);
-        //        }
-        //    }
-        //    private void DeleteVehicleMenu()
-        //    {
-        //        DisplayVehicles();
-        //        Console.WriteLine("\nEnter the Vehicle Id:\n");
-        //        Console.Write("> ");
-        //        int vehicleID = Convert.ToInt32(Console.ReadLine());
-        //        try
-        //        {
-        //            bool isPresent = _transport.IsVehiclePresent(vehicleID);
-        //            if (isPresent)
-        //            {
-        //                DeleteVehicle(vehicleID);
-        //            }
-        //            else
-        //            {
-        //                throw new VehicleNotFoundException($"The VehicleID {vehicleID} could not be found.\n", vehicleID);
-        //            }
-        //        }
-        //        catch (VehicleNotFoundException vnfe)
-        //        {
-        //            Console.WriteLine(vnfe.Message);
-        //        }
-        //        catch(Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //    }
-
-        //    private void DeleteVehicle(int vehicleID)
-        //    {
-        //        bool deleteVehicleStatus = _transport.DeleteVehicle(vehicleID);
-        //        if (!deleteVehicleStatus)
-        //        {
-        //            _prettyConsole.Print("Error Deleting Vehicle\n", false);
-        //        }
-        //        _prettyConsole.Print("Deleted Vehicle Successfully\n", true);
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

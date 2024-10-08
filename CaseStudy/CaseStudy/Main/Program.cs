@@ -1,4 +1,7 @@
-﻿using CaseStudy.Main;
+﻿using CaseStudy.DAO;
+using CaseStudy.Main;
+using CaseStudy.Model;
+
 
 namespace CaseStudy
 {
@@ -6,8 +9,41 @@ namespace CaseStudy
     {
         static void Main(string[] args)
         {
-            Menu menu = new Menu();
-            menu.MainMenu();
+            Menu menu = new();
+            int choice = 0;
+            do
+            {
+                Console.Clear();
+                try
+                {
+                    Console.WriteLine("------------------------------ User Menu ------------------------");
+                    Console.WriteLine("\n1. Login");
+                    Console.WriteLine("\n2. Register");
+                    Console.WriteLine("\n3. Exit");
+                    Console.Write("> ");
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    switch (choice)
+                    {
+                        case 1:
+                            menu.Login();
+                            break;
+                        case 2:
+                            menu.UserMenu();
+                            break;
+                        case 3:
+                            Console.Beep();
+                            Console.WriteLine("Exiting Application");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (choice != 3) ;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace CaseStudy.Main
                 }
                 table.AddRow(values.ToArray());
             }
-            Console.WriteLine(table.ToString());
+            table.Write(Format.Alternative);
         }
     }
 }
